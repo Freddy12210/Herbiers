@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Relevés{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1>Relevés index</h1>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Lieu</th>
+                <th>Relevé brut</th>
+                <th>Tableau</th>
+                <th>Visualisation</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for releve in releves %}
+                <tr>
+                    <td>{{ releve.date ? releve.date|date('d-m-Y') : '' }}</td>
+                    <td>{{ releve.lieu.libelle }}</td>
+                    <td>{{ releve.releveBrut }}</td>
+                    <td>
+                        <table>
+                            {% for row in 0..2 %}
+                                <tr>
+                                    {% for col in 0..2 %}
+                                        <td class='border border-black p-1'>
+                                            {% set index = row * 3 + col %}
+                                            {{ releve.getChampTableauElement(index) }}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </td>
+                    <td>
+                        {#  #}
+                        <table class="bordure">
+                            {% set tableau = releve.getChampTableau() %}
+                            {% for row in 0..2 %}
+                                <tr>
+                                    {% for col in 0..2 %}
+                                        <td>
+                                            <table>
+                                                {% set nbCasesVertes = tableau[row*3 + col] %}
+                                                {% set nbCasesRestantes = 9 %}
+                                                {% for row2 in 0..2 %}
+                                                    <tr>
+                                                        {% for col2 in 0..2 %}
+                                                            {% if nbCasesVertes < nbCasesRestantes and nbCasesVertes > 0 %}
+                                                                {% set caseVerte = random(0,1) %}
+                                                                {% if caseVerte == 1 %}
+                                                                    <td class="bg-success p-2"></td>
+                                                                    {% set nbCasesVertes = nbCasesVertes - 1 %}
+                                                                    {% set nbCasesRestantes = nbCasesRestantes - 1 %}
+                                                                {% else %}
+                                                                    <td class="p-2"></td>
+                                                                    {% set nbCasesRestantes = nbCasesRestantes - 1 %}
+                                                                {% endif %}
+                                                            {% elseif nbCasesVertes > 0 %}
+                                                                <td class="bg-success p-2"></td>
+                                                                {% set nbCasesVertes = nbCasesVertes - 1 %}
+                                                                {% set nbCasesRestantes = nbCasesRestantes - 1 %}
+                                                            {% else %}
+                                                                <td class="p-2"></td>
+                                                                {% set nbCasesRestantes = nbCasesRestantes - 1 %}
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </tr>
+                                                {% endfor %}
+                                            </table>
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </td>
+                    <td>
+                        <a href="{{ path('app_releves_edit', {'id': releve.id}) }}" class="btn btn-primary btn-sm">Modifier</a>
+                        {{ include('releves/_delete_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">Aucun relevé trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_releves_new') }}" class="btn btn-success">Ajouter un relevé</a>
+        <a href="{{ path('app_lieu_index') }}" class="btn btn-primary">Administrer les lieux</a>
+    </div>
+{% endblock %}

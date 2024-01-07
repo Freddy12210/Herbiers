@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Releves{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1>Modifier le relevé</h1>
+
+        {{ include('releves/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+        <a href="{{ path('app_releves_index') }}" class="btn btn-secondary mb-3">Retourner aux relevés</a>
+    </div>
+{% endblock %}

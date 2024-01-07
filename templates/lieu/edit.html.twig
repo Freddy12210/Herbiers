@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Lieu{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Modifier un Lieu</h1>
+    {{ include('lieu/_form.html.twig', {'button_label': 'Modifier'}) }}
+    <a href="{{ path('app_lieu_index') }}" class="btn btn-secondary">Retourner aux lieux</a>
+    {{ include('lieu/_delete_form.html.twig') }}
+</div>
+{% endblock %}
